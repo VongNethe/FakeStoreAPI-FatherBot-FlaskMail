@@ -1,74 +1,42 @@
 {% extends "master.html" %}
 {% block content %}
+<div id="app">
     <div class="container mt-5">
-        <h2 class="mb-4">Your Shopping Cart([[ cart_list.length ]])</h2>
+        <h2 class="mb-4">Your Shopping Cart ([[ cart_list.length ]])</h2>
         <div class="row">
             <!-- Cart Items -->
             <div class="col-lg-8">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Product</th>
-                        <th scope="col">Details</th>
-                        <th scope="col" style="width: 130px;">Quantity</th>
-                        <th scope="col" class="text-right">Price</th>
-                        <th scope="col" class="text-right">Total</th>
-                        <th scope="col"></th>
-                    </tr>
+                        <tr>
+                            <th>Product</th>
+                            <th>Details</th>
+                            <th style="width: 130px;">Quantity</th>
+                            <th class="text-right">Price</th>
+                            <th class="text-right">Total</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr
-                            v-for="(item, index) in cart_list"
-                            :key="'cart_list_'+index"
-                    >
-                        <td>
-                            <img
-                                    :src="item.image"
-                                    alt="Fjallraven - Foldsack No. 1 Backpack"
-                                    class="img-fluid"
-                                    style="height: 70px; object-fit: contain; width: 100%;"
-                            >
-                        </td>
-                        <td>
-                            <a
-                                    target="_blank"
-                                    :href="'/product-detail/'+item.id"
-                                    class="product-title"
-                            >[[ item.title ]]</a>
-                            <small class="text-muted">[[ item.category ]]</small>
-                        </td>
-                        <td>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button
-                                            class="btn btn-outline-secondary btn-sm"
-                                            type="button"
-                                            @click="removeCartQty(index)"
-                                    >-
-                                    </button>
+                        <tr v-for="(item, index) in cart_list" :key="index">
+                            <td><img :src="item.image" alt="[[ item.title ]]" class="img-fluid" style="height: 70px; object-fit: contain;"></td>
+                            <td>
+                                <a :href="'/product-detail?pro_id='+item.id" target="_blank">[[ item.title ]]</a>
+                                <small class="d-block text-muted">[[ item.category ]]</small>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" @click="removeCartQty(index)">-</button>
+                                    <input type="number" class="form-control form-control-sm text-center" style="max-width: 50px;" v-model.number="item.qty">
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" @click="addCartQty(index)">+</button>
                                 </div>
-                                <input
-                                        type="text"
-                                        class="form-control form-control-sm text-center"
-                                        style="max-width: 40px;"
-                                        v-model="item.qty"
-                                >
-                                <div class="input-group-append">
-                                    <button
-                                            class="btn btn-outline-secondary btn-sm"
-                                            type="button"
-                                            @click="addCartQty(index)"
-                                    >+
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-right">$ [[ item.price ]]</td>
-                        <td class="text-right">$ [[ (item.qty * item.price ).toLocaleString() ]]</td>
-                        <td class="text-center">
-                            <button @click="removeCartItem(index)" class="btn btn-danger btn-sm">&times;</button>
-                        </td>
-                    </tr>
+                            </td>
+                            <td class="text-right">$ [[ parseFloat(item.price).toFixed(2) ]]</td>
+                            <td class="text-right">$ [[ (item.qty * parseFloat(item.price)).toFixed(2) ]]</td>
+                            <td class="text-center">
+                                <button class="btn btn-danger btn-sm" @click="removeCartItem(index)">&times;</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <a href="/" class="btn btn-link">Continue Shopping</a>
@@ -77,9 +45,7 @@
             <!-- Cart Summary -->
             <div class="col-lg-4">
                 <div class="card">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">Order Summary</h5>
-                    </div>
+                    <div class="card-header bg-light"><h5>Order Summary</h5></div>
                     <div class="card-body">
                         <ul class="list-group mb-3">
                             <li class="list-group-item d-flex justify-content-between">
@@ -92,13 +58,14 @@
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>Total</span>
-                                <strong>$ [[ parseFloat(calGrandTotal()) + parseFloat(shipping_fee) ]]</strong>
+                                <strong>$ [[ (parseFloat(calGrandTotal()) + parseFloat(shipping_fee)).toFixed(2) ]]</strong>
                             </li>
                         </ul>
-                        <button class="btn btn-primary btn-block">Proceed to Checkout</button>
+                        <a href="/checkout" class="btn btn-primary btn-block">Proceed to Checkout</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

@@ -1,0 +1,69 @@
+{% extends "master.html" %}
+{% block content %}
+<div id="app" class="container mt-5 mb-5">
+    <div class="row">
+        <!-- Checkout Form -->
+        <div class="col-lg-6 col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4>Checkout & Verification</h4>
+                </div>
+                <div class="card-body">
+                    <form @submit.prevent="submitCheckout">
+                        <div class="mb-3">
+                            <label>Your Name</label>
+                            <input type="text" class="form-control" v-model="customer.name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Email</label>
+                            <input type="email" class="form-control" v-model="customer.email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Phone</label>
+                            <input type="text" class="form-control" v-model="customer.phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Location</label>
+                            <input type="text" class="form-control" v-model="customer.location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Payment Method</label>
+                            <select class="form-control" v-model="customer.payment" required>
+                                <option value="">Select Payment</option>
+                                <option value="cash">Cash on Delivery</option>
+                                <option value="card">Credit/Debit Card</option>
+                                <option value="paypal">PayPal</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Verify & Submit Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-6 col-md-5 mt-4 mt-md-0">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>Your Ordered Items ([[ cart_list.length ]])</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between" v-for="item in cart_list" :key="item.id">
+                            <div>
+                                <strong>[[ item.title ]]</strong><br>
+                                Quantity: [[ item.qty ]]
+                            </div>
+                            <span>$ [[ (parseFloat(item.price) * parseInt(item.qty)).toFixed(2) ]]</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <strong>Total</strong>
+                            <strong>$ [[ (parseFloat(calGrandTotal()) + parseFloat(shipping_fee)).toFixed(2) ]]</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
